@@ -24,15 +24,16 @@ plabel     = ["$\\langle cos[4(\\Psi_{4}-\\Psi_{2})]\\rangle$",
 dataTypeStr = ["ALICE","{T\\raisebox{-.5ex}{R}ENTo} (cumulants)","{T\\raisebox{-.5ex}{R}ENTo} (eccentricities)","{T\\raisebox{-.5ex}{R}ENTo} + VISH2+1 + UrQMD"];
 dataTypeInRoot = ["ALICE","_Trento_Cumulants","_Trento_Ecc","_TrentoVISHNU_FinalState"];
 dataTypePlotParams = [
-        {'plotType':'data','color':'black','fmt':'s','fillstyle':'none','markersize':5.5},
-        {'plotType':'data','color':'#0051a2','fmt':'s','markersize':4.0},
-        {'plotType':'data','color':'#ff0000','fmt':'o','fillstyle':'none','markersize':5.5},
-        {'plotType':'data','color':'#ff9900','fmt':'o','markersize':4.0}
+        {'plotType':'data','color':'red','fmt':'o','markersize':5.0},
+        {'plotType':'data','color':'#e580ff','fmt':'X','fillstyle':'none','markersize':5.5},
+        {'plotType':'data','color':'#44aa11','fmt':'h','markersize':4.0},
+        {'plotType':'data','color':'red','fmt':'D','fillstyle':'none','markersize':5.0},
+        {'plotType':'data','color':'cyan','fmt':'d','fillstyle':'none','markersize':5.5}
 ];
 modelTypePlotParams = [
-	{'plotType':'theory','color':'black','alpha':0.5,'linestyle':'solid'},
+	{'plotType':'theory','color':'#0051a2','alpha':0.5,'linestyle':'dashed'},
 	{'plotType':'theory','color':'#0051a2','alpha':0.5,'linestyle':'dotted'},
-	{'plotType':'theory','color':'#ff0000','alpha':0.5,'linestyle':'dashed'},
+	{'plotType':'theory','color':'red','alpha':0.5,'linestyle':'solid'},
 	{'plotType':'theory','color':'#ff9900','alpha':0.5,'linestyle':'dashdot'}
 ];
 def RemovePoints(arrays, pointIndices):
@@ -81,9 +82,9 @@ plot.GetAxes(3).plot([0,50],[0,0],linestyle=":",color="gray");
 
 for i in range(0,obsN):
 	gr = f.Get("{:s}{:s}".format(obsTypeStr[i],"_Stat"));
-	plot1 = plot.AddTGraph(obsPanel[i],gr,**dataTypePlotParams[i]);
+	plot1 = plot.AddTGraph(obsPanel[i],gr,**dataTypePlotParams[0]);
 	if(i==0):
-		plot1 = plot.AddTGraph(obsPanel[i],gr,**dataTypePlotParams[i],label=dataTypeStr[0]);
+		plot1 = plot.AddTGraph(obsPanel[i],gr,**dataTypePlotParams[0],label=dataTypeStr[0]);
 	# systematics
 	grsyst = f.Get("{:s}{:s}".format(obsTypeStr[i],"_Syst"));
 	_,_,_,yerrsyst = JPyPlotRatio.TGraphErrorsToNumpy(grsyst);
