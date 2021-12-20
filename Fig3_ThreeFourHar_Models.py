@@ -36,10 +36,12 @@ dataTypePlotParams = [
         {'plotType':'data','color':'cyan','fmt':'d','fillstyle':'none','markersize':5.5}
 ];
 modelTypePlotParams = [
+#	{'plotType':'theory','facecolor':'C0','edgecolor':'C0','alpha':0.5,'linestyle':'solid','linecolor':'C0'},
+#	{'plotType':'theory','facecolor':'C1','edgecolor':'C1','alpha':0.5,'linestyle':'dashed','linecolor':'C1'},
+#	{'plotType':'theory','facecolor':'C2','edgecolor':'C2','alpha':0.5,'linestyle':'dotted','linecolor':'C2'},
 	{'plotType':'theory','color':'#0051a2','alpha':0.5,'linestyle':'dashed'},
 	{'plotType':'theory','color':'#0051a2','alpha':0.5,'linestyle':'dotted'},
-	{'plotType':'theory','color':'red','alpha':0.5,'linestyle':'solid'},
-	{'plotType':'theory','color':'#ff9900','alpha':0.5,'linestyle':'dashdot'}
+	{'plotType':'theory','color':'red','alpha':0.5,'linestyle':'solid'}
 ];
 def RemovePoints(arrays, pointIndices):
 	return tuple([np.delete(a,pointIndices) for a in arrays]);

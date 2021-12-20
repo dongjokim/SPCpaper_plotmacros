@@ -11,6 +11,7 @@ sys.path.append("JPyPlotRatio");
 import JPyPlotRatio
 
 f = ROOT.TFile("data/Output_ALICE.root","read");
+fmodel = ROOT.TFile("data/Output_TrentoVISHNU.root","read");
 
 obsPanel = [0,0,0,0,1,1,1,1,1];
 obsTypeStr  = ["4Psi4_n4Psi2","6Psi3_n6Psi2","6Psi6_n6Psi2","6Psi6_n6Psi3",
@@ -27,8 +28,8 @@ plabel     = ["$\\langle cos[4(\\Psi_{4}-\\Psi_{2})]\\rangle$",
 	      "$\\langle cos[2\\Psi_{2}+4\\Psi_{4}-6\\Psi_{6}]\\rangle$", # 3 har
 	      "$\\langle cos[2\\Psi_{2}-3\\Psi_{3}-4\\Psi_{4}+5\\Psi_{5}]\\rangle$" # 4 har
 	      ];
-dataTypeStr = ["ALICE","T_{R}ENTo (eccentricities)","T_{R}ENTo + VISH2+1 + UrQMD"];
-dataTypeInRoot = ["ALICE","Trento_Ecc","TrentoVISHNU_FinalState"];
+dataTypeStr = ["ALICE","{T\\raisebox{-.5ex}{R}ENTo} (cumulants)","{T\\raisebox{-.5ex}{R}ENTo} (eccentricities)","{T\\raisebox{-.5ex}{R}ENTo} + VISH2+1 + UrQMD"];
+dataTypeInRoot = ["ALICE","_Trento_Cumulants","_Trento_Ecc","_TrentoVISHNU_FinalState"];
 dataTypePlotParams = [
         {'plotType':'data','color':'black','fmt':'s','fillstyle':'none','markersize':5.5},
         {'plotType':'data','color':'#0051a2','fmt':'s','markersize':4.0},
@@ -42,9 +43,11 @@ dataTypePlotParams = [
         {'plotType':'data','color':'cyan','fmt':'d','fillstyle':'none','markersize':5.5}
 ];
 
+
 def RemovePoints(arrays, pointIndices):
 	return tuple([np.delete(a,pointIndices) for a in arrays]);
 
+modelDraw = 0
 # define panel/xaxis limits/titles
 ny = 1;
 nx = 2;
@@ -85,15 +88,23 @@ plot.GetAxes(1).plot([0,50],[0,0],linestyle=":",color="gray");
 for i in range(0,obsN):
 	gr = f.Get("{:s}{:s}".format(obsTypeStr[i],"_Stat"));
 	x,y,_,yerr = JPyPlotRatio.TGraphErrorsToNumpy(gr);
-	if(i==8):
-		RemovePoints(x,0)
-		RemovePoints(y,0)
-		RemovePoints(yerr,0)		
-	plot1 = plot.AddTGraph(obsPanel[i],(x,y,yerr),**dataTypePlotParams[i],label=plabel[i],labelLegendId=obsPanel[i]);
-	# systematics
-	grsyst = f.Get("{:s}{:s}".format(obsTypeStr[i],"_Syst"));
-	_,_,_,yerrsyst = JPyPlotRatio.TGraphErrorsToNumpy(grsyst);
-	plot.AddSyst(plot1,yerrsyst);
+	if(i==5 or i==8):
+		x = x[1:] 
+		y = y[1:]
+		yerr = yerr[1:]
+	if(modelDraw == 0):			
+		plot1 = plot.AddTGraph(obsPanel[i],(x,y,yerr),**dataTypePlotParams[i],label=plabel[i],labelLegendId=obsPanel[i]);
+		# systematics
+		grsyst = f.Get("{:s}{:s}".format(obsTypeStr[i],"_Syst"));
+		_,_,_,yerrsyst = JPyPlotRatio.TGraphErrorsToNumpy(grsyst);
+		if(i==5 or i==8):
+			yerrsyst = yerrsyst[1:]
+		plot.AddSyst(plot1,yerrsyst);
+	if(modelDraw == 1 and i!=5):
+			# model
+		j = 2;
+		grmodel = fmodel.Get("{:s}{:s}".format(obsTypeStr[i],dataTypeInRoot[j+1]));
+		plotModel = plot.AddTGraph(obsPanel[i],grmodel,**dataTypePlotParams[i],label=plabel[i],labelLegendId=obsPanel[i]);
 
 f.Close();
 
@@ -106,6 +117,9 @@ plot.Plot();
 
 #plot.GetRatioAxes(3).remove();
 
-plot.Save("figs/Fig1_AllObs.pdf");
+if(modelDraw==0):
+	plot.Save("figs/Fig1_AllObs.pdf");
+if(modelDraw==1):
+	plot.Save("figs/Fig1_AllObs_hydro.pdf");
 plot.Show();
 
