@@ -13,7 +13,7 @@ import JPyPlotRatio
 f = ROOT.TFile("data/Output_ALICE.root","read");
 fmodel = ROOT.TFile("data/Output_TrentoVISHNU.root","read");
 
-obsPanel = [0,3,2,1];
+obsPanel = [0,1,2,3]; # it must be in order for now to make the plabel consistent!!!
 obsTypeStr  = ["4Psi4_n4Psi2","6Psi3_n6Psi2","6Psi6_n6Psi2","6Psi6_n6Psi3"
 		];
 plabel     = ["$\\langle cos[4(\\Psi_{4}-\\Psi_{2})]\\rangle$",
