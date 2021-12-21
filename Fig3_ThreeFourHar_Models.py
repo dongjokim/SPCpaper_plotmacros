@@ -48,6 +48,7 @@ ny = 3;
 nx = 2;
 xlimits = [(0.,53.)];
 ylimits = [(-0.6,0.85),(-0.14,0.17),(-0.15,0.5)]; # just rows
+ylimitsPri = [(-0.11,0.11)]
 
 xtitle = ["Centrality percentile"];
 ytitle = ["Correlations","Correlations"];
@@ -58,7 +59,7 @@ dataDetail = "$0.2 < p_\\mathrm{T} < 5.0\\,\\mathrm{GeV}/c$\n$|\\eta| < 0.8$";
 
 plot = JPyPlotRatio.JPyPlotRatio(panels=(ny,nx),panelsize=(5,5),disableRatio=[0,1,2],
 	rowBounds=ylimits, #only one row, add the shared ylims
-	panelPrivateRowBounds={1:ylimits[1]},
+	panelPrivateRowBounds={1:ylimitsPri[0]},
 	colBounds={0:xlimits[0],1:xlimits[0]}, #two columns, set xlimit for both of them
 	ratioBounds={0:(-1,3),1:(-1,3)},
 	panelPrivateScale=[1,3], # because rowBounds are just for rows
@@ -92,12 +93,26 @@ plot.GetAxes(4).plot([0,50],[0,0],linestyle=":",color="gray");
 
 for i in range(0,obsN):
 	gr = f.Get("{:s}{:s}".format(obsTypeStr[i],"_Stat"));
-	plot1 = plot.Add(obsPanel[i],gr,**dataTypePlotParams[0]);
+	x,y,_,yerr = JPyPlotRatio.TGraphErrorsToNumpy(gr);
+	if(i==1): # remove 2 first data points 8Psi2_n3Psi3_n5Psi5
+		x = x[1:] 
+		y = y[1:]
+		yerr = yerr[1:]
+	if(i==4): # remove  first data points 2Psi_2 -3Psi_3 -4Psi_4 +5Psi_5
+		x = x[1:] 
+		y = y[1:]
+		yerr = yerr[1:]
+	plot1 = plot.Add(obsPanel[i],(x,y,yerr),**dataTypePlotParams[0]);
+
 	if(i==0):
-		plot1 = plot.Add(obsPanel[i],gr,**dataTypePlotParams[0],label=dataTypeStr[0]);
+		plot1 = plot.Add(obsPanel[i],(x,y,yerr),**dataTypePlotParams[0],label=dataTypeStr[0]);
 	# systematics
 	grsyst = f.Get("{:s}{:s}".format(obsTypeStr[i],"_Syst"));
 	_,_,_,yerrsyst = JPyPlotRatio.TGraphErrorsToNumpy(grsyst);
+	if(i==1):
+		yerrsyst = yerrsyst[1:]
+	if(i==4):
+		yerrsyst = yerrsyst[1:]
 	plot.AddSyst(plot1,yerrsyst);
 	# model
 	for j in range(0,3):
