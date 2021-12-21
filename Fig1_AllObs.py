@@ -32,14 +32,14 @@ dataTypeStr = ["ALICE","{T\\raisebox{-.5ex}{R}ENTo} (cumulants)","{T\\raisebox{-
 dataTypeInRoot = ["ALICE","_Trento_Cumulants","_Trento_Ecc","_TrentoVISHNU_FinalState"];
 dataTypePlotParams = [
         {'plotType':'data','color':'black','fmt':'s','fillstyle':'none','markersize':5.5},
-        {'plotType':'data','color':'#0051a2','fmt':'s','markersize':4.0},
+        {'plotType':'data','color':'#0051a2','fmt':'s','markersize':5.5},
         {'plotType':'data','color':'#ff0000','fmt':'o','fillstyle':'none','markersize':5.5},
-        {'plotType':'data','color':'#ff9900','fmt':'o','markersize':4.0},
+        {'plotType':'data','color':'#ff9900','fmt':'o','markersize':5.5},
         {'plotType':'data','color':'#660080','fmt':'P','fillstyle':'none','markersize':5.5},
-        {'plotType':'data','color':'#9955ff','fmt':'P','markersize':4.0},
+        {'plotType':'data','color':'#9955ff','fmt':'*','markersize':5.5},
         {'plotType':'data','color':'#e580ff','fmt':'X','fillstyle':'none','markersize':5.5},
-        {'plotType':'data','color':'#44aa11','fmt':'h','markersize':4.0},
-        {'plotType':'data','color':'red','fmt':'D','fillstyle':'none','markersize':5.0},
+        {'plotType':'data','color':'#44aa11','fmt':'h','markersize':5.5},
+        {'plotType':'data','color':'red','fmt':'D','fillstyle':'none','markersize':5.5},
         {'plotType':'data','color':'cyan','fmt':'d','fillstyle':'none','markersize':5.5}
 ];
 
@@ -48,6 +48,7 @@ def RemovePoints(arrays, pointIndices):
 	return tuple([np.delete(a,pointIndices) for a in arrays]);
 
 modelDraw = 0
+imodel = 1;
 # define panel/xaxis limits/titles
 ny = 1;
 nx = 2;
@@ -70,6 +71,7 @@ plot = JPyPlotRatio.JPyPlotRatio(panels=(ny,nx),panelsize=(5,6),disableRatio=[0]
 	panelLabelLoc=(0.07,0.86),panelLabelSize=9,
 	#panelScaling={3:5},
 	panelLabelAlign="left",
+	systPatchWidth = 0.03,
 	legendPanel={0:0,1:1},legendLoc={0:(0.65,0.20),1:(0.35,0.18)},legendSize=9,xlabel=xtitle[0],ylabel=ytitle[0]);
 
 plot.GetAxes(1).yaxis.tick_right();
@@ -93,7 +95,7 @@ for i in range(0,obsN):
 		y = y[1:]
 		yerr = yerr[1:]
 	if(modelDraw == 0):			
-		plot1 = plot.AddTGraph(obsPanel[i],(x,y,yerr),**dataTypePlotParams[i],label=plabel[i],labelLegendId=obsPanel[i]);
+		plot1 = plot.Add(obsPanel[i],(x,y,yerr),**dataTypePlotParams[i],label=plabel[i],labelLegendId=obsPanel[i]);
 		# systematics
 		grsyst = f.Get("{:s}{:s}".format(obsTypeStr[i],"_Syst"));
 		_,_,_,yerrsyst = JPyPlotRatio.TGraphErrorsToNumpy(grsyst);
@@ -102,24 +104,28 @@ for i in range(0,obsN):
 		plot.AddSyst(plot1,yerrsyst);
 	if(modelDraw == 1 and i!=5):
 			# model
-		j = 2;
-		grmodel = fmodel.Get("{:s}{:s}".format(obsTypeStr[i],dataTypeInRoot[j+1]));
-		plotModel = plot.AddTGraph(obsPanel[i],grmodel,**dataTypePlotParams[i],label=plabel[i],labelLegendId=obsPanel[i]);
+		grmodel = fmodel.Get("{:s}{:s}".format(obsTypeStr[i],dataTypeInRoot[imodel]));
+		plotModel = plot.Add(obsPanel[i],grmodel,**dataTypePlotParams[i],label=plabel[i],labelLegendId=obsPanel[i]);
 
 f.Close();
 
-plot.GetPlot().text(0.16,0.31,"ALICE",fontsize=9);
-plot.GetPlot().text(0.16,0.27,toptitle,fontsize=9);
-plot.GetPlot().text(0.16,0.20,dataDetail,fontsize=9);
-#plot.GetAxes(3).text(0.1,0.1,dataDetail,fontsize=9);
 
-plot.Plot();
 
 #plot.GetRatioAxes(3).remove();
 
 if(modelDraw==0):
+	plot.GetPlot().text(0.16,0.31,"ALICE",fontsize=9);
+	plot.GetPlot().text(0.16,0.27,toptitle,fontsize=9);
+	plot.GetPlot().text(0.16,0.20,dataDetail,fontsize=9);
+	#plot.GetAxes(3).text(0.1,0.1,dataDetail,fontsize=9);
+	plot.Plot();
 	plot.Save("figs/Fig1_AllObs.pdf");
 if(modelDraw==1):
-	plot.Save("figs/Fig1_AllObs_hydro.pdf");
+	plot.GetPlot().text(0.16,0.31,dataTypeStr[imodel],fontsize=9);
+	plot.GetPlot().text(0.16,0.27,toptitle,fontsize=9);
+	plot.GetPlot().text(0.16,0.20,dataDetail,fontsize=9);
+	#plot.GetAxes(3).text(0.1,0.1,dataDetail,fontsize=9);
+	plot.Plot();
+	plot.Save("figs/Fig1_AllObs_{:s}.pdf".format(dataTypeInRoot[imodel]));
 plot.Show();
 

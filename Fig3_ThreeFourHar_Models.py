@@ -36,12 +36,9 @@ dataTypePlotParams = [
         {'plotType':'data','color':'cyan','fmt':'d','fillstyle':'none','markersize':5.5}
 ];
 modelTypePlotParams = [
-#	{'plotType':'theory','facecolor':'C0','edgecolor':'C0','alpha':0.5,'linestyle':'solid','linecolor':'C0'},
-#	{'plotType':'theory','facecolor':'C1','edgecolor':'C1','alpha':0.5,'linestyle':'dashed','linecolor':'C1'},
-#	{'plotType':'theory','facecolor':'C2','edgecolor':'C2','alpha':0.5,'linestyle':'dotted','linecolor':'C2'},
-	{'plotType':'theory','color':'#0051a2','alpha':0.5,'linestyle':'dashed'},
-	{'plotType':'theory','color':'#0051a2','alpha':0.5,'linestyle':'dotted'},
-	{'plotType':'theory','color':'red','alpha':0.5,'linestyle':'solid'}
+	{'plotType':'theory','color':'#0051a2','linecolor':'#0051a2','alpha':0.5,'linestyle':'solid'},
+	{'plotType':'theory','color':'#e580ff','linecolor':'#e580ff','alpha':0.5,'linestyle':'dotted'},
+	{'plotType':'theory','color':'red','linecolor':'red','alpha':0.5,'linestyle':'solid'}
 ];
 def RemovePoints(arrays, pointIndices):
 	return tuple([np.delete(a,pointIndices) for a in arrays]);
@@ -50,7 +47,7 @@ def RemovePoints(arrays, pointIndices):
 ny = 3;
 nx = 2;
 xlimits = [(0.,53.)];
-ylimits = [(-0.6,0.85),(-0.15,0.17),(-0.15,0.5),(-0.15,0.15),(-0.55,0.85),(-0.15,0.5)];
+ylimits = [(-0.6,0.85),(-0.14,0.17),(-0.15,0.5),(-0.15,0.15),(-0.55,0.95),(-0.15,0.5)];
 
 xtitle = ["Centrality percentile"];
 ytitle = ["Correlations","Correlations"];
@@ -69,6 +66,7 @@ plot = JPyPlotRatio.JPyPlotRatio(panels=(ny,nx),panelsize=(5,5),disableRatio=[0,
 	panelLabel=plabel,
 	#panelScaling={3:5},
 	panelLabelAlign="left",
+	systPatchWidth = 0.03,
 legendPanel=5,legendLoc=(0.60,0.36),legendSize=9,ylabel={0:ytitle[0],1:ytitle[0],2:ytitle[0]});
 plot.GetPlot().text(0.5,0.05,xtitle[0],size=plot.axisLabelSize,horizontalalignment="center");
 plot.GetAxes(1).yaxis.tick_right();
@@ -93,9 +91,9 @@ plot.GetAxes(4).plot([0,50],[0,0],linestyle=":",color="gray");
 
 for i in range(0,obsN):
 	gr = f.Get("{:s}{:s}".format(obsTypeStr[i],"_Stat"));
-	plot1 = plot.AddTGraph(obsPanel[i],gr,**dataTypePlotParams[0]);
+	plot1 = plot.Add(obsPanel[i],gr,**dataTypePlotParams[0]);
 	if(i==0):
-		plot1 = plot.AddTGraph(obsPanel[i],gr,**dataTypePlotParams[0],label=dataTypeStr[0]);
+		plot1 = plot.Add(obsPanel[i],gr,**dataTypePlotParams[0],label=dataTypeStr[0]);
 	# systematics
 	grsyst = f.Get("{:s}{:s}".format(obsTypeStr[i],"_Syst"));
 	_,_,_,yerrsyst = JPyPlotRatio.TGraphErrorsToNumpy(grsyst);
@@ -107,7 +105,7 @@ for i in range(0,obsN):
 		grmodel = fmodel.Get("{:s}{:s}".format(obsTypeStr[i],dataTypeInRoot[j+1]));
 		#print("{:s}{:s}".format(obsTypeStr[i],dataTypeInRoot[j+1]))
 		#print(j)
-		plotModel = plot.AddTGraph(obsPanel[i],grmodel,**modelTypePlotParams[j],label=dataTypeStr[j+1]);
+		plotModel = plot.Add(obsPanel[i],grmodel,**modelTypePlotParams[j],label=dataTypeStr[j+1]);
 
 f.Close();
 print("I am here,,")
