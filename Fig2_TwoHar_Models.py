@@ -42,7 +42,7 @@ def RemovePoints(arrays, pointIndices):
 ny = 2;
 nx = 2;
 xlimits = [(0.,53.)];
-ylimits = [(-0.5,0.55),(-0.5,0.55),(-0.5,0.55),(-0.5,0.55)];
+ylimits = [(-0.5,0.55),(-0.5,0.55)];
 
 xtitle = ["Centrality percentile"];
 ytitle = ["Correlations","Correlations"];

@@ -47,7 +47,7 @@ def RemovePoints(arrays, pointIndices):
 ny = 3;
 nx = 2;
 xlimits = [(0.,53.)];
-ylimits = [(-0.6,0.85),(-0.14,0.17),(-0.15,0.5),(-0.15,0.15),(-0.55,0.95),(-0.15,0.5)];
+ylimits = [(-0.6,0.85),(-0.14,0.17),(-0.15,0.5)]; # just rows
 
 xtitle = ["Centrality percentile"];
 ytitle = ["Correlations","Correlations"];
@@ -58,9 +58,10 @@ dataDetail = "$0.2 < p_\\mathrm{T} < 5.0\\,\\mathrm{GeV}/c$\n$|\\eta| < 0.8$";
 
 plot = JPyPlotRatio.JPyPlotRatio(panels=(ny,nx),panelsize=(5,5),disableRatio=[0,1,2],
 	rowBounds=ylimits, #only one row, add the shared ylims
+	panelPrivateRowBounds={1:ylimits[1]},
 	colBounds={0:xlimits[0],1:xlimits[0]}, #two columns, set xlimit for both of them
 	ratioBounds={0:(-1,3),1:(-1,3)},
-	panelPrivateScale=[1,3],
+	panelPrivateScale=[1,3], # because rowBounds are just for rows
 	#panelLabel={i:label for i,label in enumerate(plabel)},
 	panelLabelLoc=(0.09,0.86),panelLabelSize=11,
 	panelLabel=plabel,
