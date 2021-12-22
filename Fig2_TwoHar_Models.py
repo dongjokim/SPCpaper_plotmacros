@@ -41,8 +41,9 @@ def RemovePoints(arrays, pointIndices):
 # define panel/xaxis limits/titles
 ny = 2;
 nx = 2;
-xlimits = [(0.,53.)];
+xlimits = [(-1.,52.)];
 ylimits = [(-0.5,0.55),(-0.5,0.55)];
+ylimitsPri = [(-0.058,0.040),(-0.32,0.54)]
 
 xtitle = ["Centrality percentile"];
 ytitle = ["Correlations","Correlations"];
@@ -51,13 +52,15 @@ ytitleRight = ["Correlations"];
 toptitle = "PbPb $\\sqrt{s_{NN}}$ = 2.76 TeV"; # need to add on the top
 dataDetail = "$0.2 < p_\\mathrm{T} < 5.0\\,\\mathrm{GeV}/c$\n$|\\eta| < 0.8$";
 
-plot = JPyPlotRatio.JPyPlotRatio(panels=(ny,nx),panelsize=(5,5),disableRatio=[0,1],
+plot = JPyPlotRatio.JPyPlotRatio(panels=(ny,nx),panelsize=(5,5),
+	disableRatio=[0,1],
 #	rowBounds=ylimits, #only one row, add the shared ylims
+	panelPrivateRowBounds={1:ylimitsPri[0],3:ylimitsPri[1]},
 	colBounds={0:xlimits[0],1:xlimits[0]}, #two columns, set xlimit for both of them
 	ratioBounds={0:(-1,3),1:(-1,3)},
 	panelPrivateScale=[1,3],
 	#panelLabel={i:label for i,label in enumerate(plabel)},
-	panelLabelLoc=(0.07,0.86),panelLabelSize=11,
+	panelLabelLoc=(0.07,0.88),panelLabelSize=11,
 	panelLabel=plabel,
 	#panelScaling={3:5},
 	panelLabelAlign="left",
@@ -94,6 +97,7 @@ for i in range(0,obsN):
 		grmodel = fmodel.Get("{:s}{:s}".format(obsTypeStr[i],dataTypeInRoot[j+1]));
 		#grmodel.Print();
 		plotModel = plot.Add(obsPanel[i],grmodel,**modelTypePlotParams[j],label=dataTypeStr[j+1]);
+	#plot.Ratio(plotModel,plot1);
 
 f.Close();
 

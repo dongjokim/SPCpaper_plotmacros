@@ -31,16 +31,15 @@ plabel     = ["$\\langle cos[4(\\Psi_{4}-\\Psi_{2})]\\rangle$",
 dataTypeStr = ["ALICE","{T\\raisebox{-.5ex}{R}ENTo} (cumulants)","{T\\raisebox{-.5ex}{R}ENTo} (eccentricities)","{T\\raisebox{-.5ex}{R}ENTo} + VISH2+1 + UrQMD"];
 dataTypeInRoot = ["ALICE","_Trento_Cumulants","_Trento_Ecc","_TrentoVISHNU_FinalState"];
 dataTypePlotParams = [
-        {'plotType':'data','color':'black','fmt':'s','fillstyle':'none','markersize':5.5},
-        {'plotType':'data','color':'#0051a2','fmt':'s','markersize':5.5},
-        {'plotType':'data','color':'#ff0000','fmt':'o','fillstyle':'none','markersize':5.5},
-        {'plotType':'data','color':'#ff9900','fmt':'o','markersize':5.5},
-        {'plotType':'data','color':'#660080','fmt':'P','fillstyle':'none','markersize':5.5},
-        {'plotType':'data','color':'#9955ff','fmt':'*','markersize':5.5},
-        {'plotType':'data','color':'#e580ff','fmt':'X','fillstyle':'none','markersize':5.5},
-        {'plotType':'data','color':'#44aa11','fmt':'h','markersize':5.5},
-        {'plotType':'data','color':'red','fmt':'D','fillstyle':'none','markersize':5.5},
-        {'plotType':'data','color':'cyan','fmt':'d','fillstyle':'none','markersize':5.5}
+        {'plotType':'data','color':'black','fmt':'o','markersize':5.5},
+        {'plotType':'data','color':'#0051a2','fmt':'d','fillstyle':'none','markersize':6.0},
+        {'plotType':'data','color':'blue','fmt':'D','fillstyle':'none','markersize':5.5},
+        {'plotType':'data','color':'red','fmt':'s','markersize':5.5},# 2 har
+        {'plotType':'data','color':'#660080','fmt':'*','fillstyle':'none','markersize':6.0},
+        {'plotType':'data','color':'#9955ff','fmt':'d','markersize':6.0},
+        {'plotType':'data','color':'m','fmt':'X','fillstyle':'none','markersize':5.5},
+        {'plotType':'data','color':'seagreen','fmt':'h','markersize':5.5},
+        {'plotType':'data','color':'red','fmt':'H','fillstyle':'none','markersize':5.5}
 ];
 
 
@@ -48,12 +47,12 @@ def RemovePoints(arrays, pointIndices):
 	return tuple([np.delete(a,pointIndices) for a in arrays]);
 
 modelDraw = 0
-imodel = 1;
+imodel = 3; # based on dataTypeStr  and dataTypeInRoot
 # define panel/xaxis limits/titles
 ny = 1;
 nx = 2;
-xlimits = [(0.,53.)];
-ylimits = [(-0.4,0.55)];
+xlimits = [(-1.,52.)];
+ylimits = [(-0.4,0.6)];
 
 xtitle = ["Centrality percentile"];
 ytitle = ["Correlations"];
@@ -114,16 +113,16 @@ f.Close();
 #plot.GetRatioAxes(3).remove();
 
 if(modelDraw==0):
-	plot.GetPlot().text(0.16,0.31,"ALICE",fontsize=9);
-	plot.GetPlot().text(0.16,0.27,toptitle,fontsize=9);
-	plot.GetPlot().text(0.16,0.20,dataDetail,fontsize=9);
+	plot.GetPlot().text(0.15,0.81,"ALICE",fontsize=9);
+	plot.GetPlot().text(0.15,0.77,toptitle,fontsize=9);
+	plot.GetPlot().text(0.16,0.25,dataDetail,fontsize=9);
 	#plot.GetAxes(3).text(0.1,0.1,dataDetail,fontsize=9);
 	plot.Plot();
 	plot.Save("figs/Fig1_AllObs.pdf");
 if(modelDraw==1):
-	plot.GetPlot().text(0.16,0.31,dataTypeStr[imodel],fontsize=9);
-	plot.GetPlot().text(0.16,0.27,toptitle,fontsize=9);
-	plot.GetPlot().text(0.16,0.20,dataDetail,fontsize=9);
+	plot.GetPlot().text(0.15,0.81,dataTypeStr[imodel],fontsize=9);
+	plot.GetPlot().text(0.15,0.77,toptitle,fontsize=9);
+	plot.GetPlot().text(0.16,0.25,dataDetail,fontsize=9);
 	#plot.GetAxes(3).text(0.1,0.1,dataDetail,fontsize=9);
 	plot.Plot();
 	plot.Save("figs/Fig1_AllObs_{:s}.pdf".format(dataTypeInRoot[imodel]));

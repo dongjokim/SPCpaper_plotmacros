@@ -46,9 +46,9 @@ def RemovePoints(arrays, pointIndices):
 # define panel/xaxis limits/titles
 ny = 3;
 nx = 2;
-xlimits = [(0.,53.)];
-ylimits = [(-0.6,0.85),(-0.14,0.17),(-0.15,0.5)]; # just rows
-ylimitsPri = [(-0.11,0.11)]
+xlimits = [(-1.,52.)];
+ylimits = [(-0.58,0.7),(-0.14,0.17),(0,0.5)]; # just rows
+ylimitsPri = [(-0.07,0.11),(-0.6,0.82)]
 
 xtitle = ["Centrality percentile"];
 ytitle = ["Correlations","Correlations"];
@@ -59,17 +59,17 @@ dataDetail = "$0.2 < p_\\mathrm{T} < 5.0\\,\\mathrm{GeV}/c$\n$|\\eta| < 0.8$";
 
 plot = JPyPlotRatio.JPyPlotRatio(panels=(ny,nx),panelsize=(5,5),disableRatio=[0,1,2],
 	rowBounds=ylimits, #only one row, add the shared ylims
-	panelPrivateRowBounds={1:ylimitsPri[0]},
+	panelPrivateRowBounds={1:ylimitsPri[0],3:ylimitsPri[1]},
 	colBounds={0:xlimits[0],1:xlimits[0]}, #two columns, set xlimit for both of them
 	ratioBounds={0:(-1,3),1:(-1,3)},
 	panelPrivateScale=[1,3], # because rowBounds are just for rows
 	#panelLabel={i:label for i,label in enumerate(plabel)},
-	panelLabelLoc=(0.09,0.86),panelLabelSize=11,
+	panelLabelLoc=(0.07,0.88),panelLabelSize=11,
 	panelLabel=plabel,
 	#panelScaling={3:5},
 	panelLabelAlign="left",
 	systPatchWidth = 0.03,
-legendPanel=5,legendLoc=(0.60,0.36),legendSize=9,ylabel={0:ytitle[0],1:ytitle[0],2:ytitle[0]});
+legendPanel=5,legendLoc=(0.50,0.36),legendSize=9,ylabel={0:ytitle[0],1:ytitle[0],2:ytitle[0]});
 plot.GetPlot().text(0.5,0.05,xtitle[0],size=plot.axisLabelSize,horizontalalignment="center");
 plot.GetAxes(1).yaxis.tick_right();
 plot.GetAxes(3).yaxis.tick_right();
@@ -119,9 +119,13 @@ for i in range(0,obsN):
 		if(i==1 and j==2):
 			break
 		grmodel = fmodel.Get("{:s}{:s}".format(obsTypeStr[i],dataTypeInRoot[j+1]));
-		#print("{:s}{:s}".format(obsTypeStr[i],dataTypeInRoot[j+1]))
-		#print(j)
-		plotModel = plot.Add(obsPanel[i],grmodel,**modelTypePlotParams[j],label=dataTypeStr[j+1]);
+		x1,y1,_,yerr1 = JPyPlotRatio.TGraphErrorsToNumpy(grmodel);
+		# Remove first model data very large error
+		if(i==0 and j==2):
+			x1 = x1[1:] 
+			y1 = y1[1:]
+			yerr1 = yerr1[1:]
+		plotModel = plot.Add(obsPanel[i],(x1,y1,yerr1),**modelTypePlotParams[j],label=dataTypeStr[j+1]);
 
 f.Close();
 print("I am here,,")
