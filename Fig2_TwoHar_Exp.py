@@ -74,6 +74,16 @@ plot.GetAxes(3).yaxis.tick_right();
 
 plot.EnableLatex(True);
 
+f276 = ROOT.TFile("data/NL276ALICE_HEPData-ins1599396-v1-root.root","read");
+
+HEPTableName=["Table 14/Graph1D_y1","Table 15/Graph1D_y1","Table 16/Graph1D_y1","Table 17/Graph1D_y1"]; #rho422,rho532,rho6222,633
+for i in [t for t in range(0,4) if t != 1]:
+	gr_rho = f276.Get("{}".format(HEPTableName[i]));
+	#[grvn_276_alice[i].RemovePoint(j) for j in [7,7,7]];
+	plot.Add(i,gr_rho,xshift=0,color="black",fmt="o",mfc="none",markersize=8,label="ALICE 2.76 TeV");
+
+f276.Close();
+
 #plot.EnableLatex(True);
 obsN = len(obsTypeStr);
 
