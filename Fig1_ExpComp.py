@@ -16,10 +16,10 @@ fmodel = ROOT.TFile("data/Output_TrentoVISHNU.root","read");
 # need to add ALICE rho observables
 
 obsPanel = [0,1,2,3]; # it must be in order for now to make the plabel consistent!!!
-obsTypeStr  = ["4Psi4_n4Psi2","6Psi3_n6Psi2","6Psi6_n6Psi2","6Psi6_n6Psi3"
+obsTypeStr  = ["4Psi4_n4Psi2","2Psi2_3Psi3_n5Psi5","6Psi6_n6Psi2","6Psi6_n6Psi3"
 		];
 plabel     = ["$\\langle cos[4(\\Psi_{4}-\\Psi_{2})]\\rangle$",
-	      "$\\langle cos[6(\\Psi_{2}-\\Psi_{3})]\\rangle$",
+	      "$\\langle cos[2\\Psi_{2}+3\\Psi_{3}-5\\Psi_{5}]\\rangle$",
 	      "$\\langle cos[6(\\Psi_{6}-\\Psi_{2})]\\rangle$",
 	      "$\\langle cos[6(\\Psi_{6}-\\Psi_{3})]\\rangle$" # 2 har
 	      ];
@@ -44,8 +44,8 @@ def RemovePoints(arrays, pointIndices):
 ny = 2;
 nx = 2;
 xlimits = [(-1.,52.)];
-ylimits = [(-0.5,0.55),(-0.5,0.55)];
-ylimitsPri = [(-0.058,0.040),(-0.32,0.54)]
+ylimits = [(0,1.0),(0.,0.7)];
+ylimitsPri = [(-0.05,1.2),(0,0.75)]
 
 xtitle = ["Centrality percentile"];
 ytitle = ["Correlations","Correlations"];
@@ -74,15 +74,7 @@ plot.GetAxes(3).yaxis.tick_right();
 
 plot.EnableLatex(True);
 
-f276 = ROOT.TFile("data/NL276ALICE_HEPData-ins1599396-v1-root.root","read");
 
-HEPTableName=["Table 14/Graph1D_y1","Table 15/Graph1D_y1","Table 16/Graph1D_y1","Table 17/Graph1D_y1"]; #rho422,rho532,rho6222,633
-for i in [t for t in range(0,4) if t != 1]:
-	gr_rho = f276.Get("{}".format(HEPTableName[i]));
-	#[grvn_276_alice[i].RemovePoint(j) for j in [7,7,7]];
-	plot.Add(i,gr_rho,xshift=0,color="black",fmt="o",mfc="none",markersize=8,label="ALICE 2.76 TeV");
-
-f276.Close();
 
 #plot.EnableLatex(True);
 obsN = len(obsTypeStr);
@@ -108,10 +100,22 @@ for i in range(0,obsN):
 	for j in range(0,3):
 		grmodel = fmodel.Get("{:s}{:s}".format(obsTypeStr[i],dataTypeInRoot[j+1]));
 		#grmodel.Print();
-		plotModel = plot.Add(obsPanel[i],grmodel,**modelTypePlotParams[j],label=dataTypeStr[j+1]);
+	#	plotModel = plot.Add(obsPanel[i],grmodel,**modelTypePlotParams[j],label=dataTypeStr[j+1]);
 	#plot.Ratio(plotModel,plot1);
 
 f.Close();
+
+# adding rho observables
+f276 = ROOT.TFile("data/NL276ALICE_HEPData-ins1599396-v1-root.root","read");
+
+HEPTableName=["Table 14/Graph1D_y1","Table 15/Graph1D_y1","Table 16/Graph1D_y1","Table 17/Graph1D_y1"]; #rho422,rho532,rho6222,633
+HEPTableObsName=["$\\rho_{4,22}$","$\\rho_{5,32}$","$\\rho_{6,222}$","$\\rho_{6,33}$"];
+for i in [t for t in range(0,4)]:# if t != 1]:
+	gr_rho = f276.Get("{}".format(HEPTableName[i]));
+	#[grvn_276_alice[i].RemovePoint(j) for j in [7,7,7]];
+	plot.Add(i,gr_rho,xshift=0,color="black",fmt="o",mfc="none",markersize=8,label="$\\rho_{n,mk}$, Phys.Lett. B773 (2017) 68");
+
+f276.Close();
 
 #plot.GetPlot().text(0.16,0.31,"ALICE",fontsize=9);
 plot.GetPlot().text(0.34,0.75,toptitle,fontsize=9);
@@ -122,6 +126,6 @@ plot.Plot();
 
 #plot.GetRatioAxes(3).remove();
 
-plot.Save("figs/Fig2_TwoHar_models.pdf");
+plot.Save("figs/Fig1_expcomp.pdf");
 plot.Show();
 
