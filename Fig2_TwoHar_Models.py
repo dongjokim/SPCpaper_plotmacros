@@ -16,10 +16,10 @@ fmodel = ROOT.TFile("data/Output_TrentoVISHNU.root","read");
 obsPanel = [0,1,2,3]; # it must be in order for now to make the plabel consistent!!!
 obsTypeStr  = ["4Psi4_n4Psi2","6Psi3_n6Psi2","6Psi6_n6Psi2","6Psi6_n6Psi3"
 		];
-plabel     = ["$\\langle cos[4(\\Psi_{4}-\\Psi_{2})]\\rangle$",
-	      "$\\langle cos[6(\\Psi_{2}-\\Psi_{3})]\\rangle$",
-	      "$\\langle cos[6(\\Psi_{6}-\\Psi_{2})]\\rangle$",
-	      "$\\langle cos[6(\\Psi_{6}-\\Psi_{3})]\\rangle$" # 2 har
+plabel     = ["(a) $\\langle cos[4(\\Psi_{4}-\\Psi_{2})]\\rangle$",
+	      "(b) $\\langle cos[6(\\Psi_{2}-\\Psi_{3})]\\rangle$",
+	      "(c) $\\langle cos[6(\\Psi_{6}-\\Psi_{2})]\\rangle$",
+	      "(d) $\\langle cos[6(\\Psi_{6}-\\Psi_{3})]\\rangle$" # 2 har
 	      ];
 dataTypeStr = ["ALICE","{T\\raisebox{-.5ex}{R}ENTo} (cumulants)","{T\\raisebox{-.5ex}{R}ENTo} (eccentricities)","{T\\raisebox{-.5ex}{R}ENTo} + VISH2+1 + UrQMD"];
 dataTypeInRoot = ["ALICE","_Trento_Cumulants","_Trento_Ecc","_TrentoVISHNU_FinalState"];

@@ -14,6 +14,7 @@ f = ROOT.TFile("data/Output_ALICE.root","read");
 fmodel = ROOT.TFile("data/Output_TrentoVISHNU.root","read");
 
 obsPanel = [0,0,0,0,1,1,1,1,1];
+obsleg = [0,0,0,0,1,1,2,1,2];
 obsTypeStr  = ["4Psi4_n4Psi2","6Psi3_n6Psi2","6Psi6_n6Psi2","6Psi6_n6Psi3",
 		"2Psi2_3Psi3_n5Psi5","8Psi2_n3Psi3_n5Psi5","2Psi2_n6Psi3_4Psi4","2Psi2_4Psi4_n6Psi6",
 		"2Psi2_n3Psi3_n4Psi4_5Psi5"
@@ -52,7 +53,7 @@ imodel = 3; # based on dataTypeStr  and dataTypeInRoot
 ny = 1;
 nx = 2;
 xlimits = [(-1.,52.)];
-ylimits = [(-0.4,0.6)];
+ylimits = [(-0.3,0.55)];
 
 xtitle = ["Centrality percentile"];
 ytitle = ["Correlations"];
@@ -60,6 +61,7 @@ ytitleRight = ["NSC(k,l,m)"];
 # Following two must be added
 toptitle = "PbPb $\\sqrt{s_{NN}}$ = 2.76 TeV"; # need to add on the top
 dataDetail = "$0.2 < p_\\mathrm{T} < 5.0\\,\\mathrm{GeV}/c$\n$|\\eta| < 0.8$";
+plables = [ "(a)", "(b)" ];
 
 plot = JPyPlotRatio.JPyPlotRatio(panels=(ny,nx),panelsize=(5,6),disableRatio=[0],
 	rowBounds=ylimits, #only one row, add the shared ylims
@@ -67,11 +69,12 @@ plot = JPyPlotRatio.JPyPlotRatio(panels=(ny,nx),panelsize=(5,6),disableRatio=[0]
 	ratioBounds={0:(-1,3),1:(-1,3)},
 	#panelPrivateScale=[1,3,5],
 	#panelLabel={i:label for i,label in enumerate(plabel)},
-	panelLabelLoc=(0.07,0.86),panelLabelSize=9,
+	panelLabelLoc=(0.93,0.94),panelLabelSize=11,
+	panelLabel=plables,
 	#panelScaling={3:5},
 	panelLabelAlign="left",
 	systPatchWidth = 0.03,
-	legendPanel={0:0,1:1},legendLoc={0:(0.65,0.20),1:(0.35,0.18)},legendSize=9,xlabel=xtitle[0],ylabel=ytitle[0]);
+	legendPanel={0:0,1:1,2:1},legendLoc={0:(0.65,0.16),1:(0.23,0.15),2:(0.71,0.15)},legendSize=9,xlabel=xtitle[0],ylabel=ytitle[0]);
 
 plot.GetAxes(1).yaxis.tick_right();
 
@@ -94,7 +97,7 @@ for i in range(0,obsN):
 		y = y[1:]
 		yerr = yerr[1:]
 	if(modelDraw == 0):			
-		plot1 = plot.Add(obsPanel[i],(x,y,yerr),**dataTypePlotParams[i],label=plabel[i],labelLegendId=obsPanel[i]);
+		plot1 = plot.Add(obsPanel[i],(x,y,yerr),**dataTypePlotParams[i],label=plabel[i],labelLegendId=obsleg[i]);
 		# systematics
 		grsyst = f.Get("{:s}{:s}".format(obsTypeStr[i],"_Syst"));
 		_,_,_,yerrsyst = JPyPlotRatio.TGraphErrorsToNumpy(grsyst);
@@ -104,7 +107,7 @@ for i in range(0,obsN):
 	if(modelDraw == 1 and i!=5):
 			# model
 		grmodel = fmodel.Get("{:s}{:s}".format(obsTypeStr[i],dataTypeInRoot[imodel]));
-		plotModel = plot.Add(obsPanel[i],grmodel,**dataTypePlotParams[i],label=plabel[i],labelLegendId=obsPanel[i]);
+		plotModel = plot.Add(obsPanel[i],grmodel,**dataTypePlotParams[i],label=plabel[i],labelLegendId=obsleg[i]);
 
 f.Close();
 
